@@ -6,31 +6,30 @@ session_start();
 
 if(isset($_SESSION['user_id'])){
    $user_id = $_SESSION['user_id'];
-}else{
+} else {
    $user_id = '';
-};
+}
 
 if(isset($_POST['submit'])){
 
-   $email = $_POST['email'];
-   $email = filter_var($email, FILTER_SANITIZE_STRING);
-   $pass = sha1($_POST['pass']);
-   $pass = filter_var($pass, FILTER_SANITIZE_STRING);
+   $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+   $pass = $_POST['pass']; // Keep the original password for verification
 
-   $select_user = $conn->prepare("SELECT * FROM `users` WHERE email = ? AND password = ?");
-   $select_user->execute([$email, $pass]);
+   $select_user = $conn->prepare("SELECT * FROM `customers` WHERE Email = ?");
+   $select_user->execute([$email]);
    $row = $select_user->fetch(PDO::FETCH_ASSOC);
 
-   if($select_user->rowCount() > 0){
-      $_SESSION['user_id'] = $row['id'];
+   if($row && password_verify($pass, $row['Password'])){
+      // If the user is found and the password is correct
+      $_SESSION['user_id'] = $row['ID']; // Make sure to use the correct column name for the user's ID
       header('location:home.php');
-   }else{
-      $message[] = 'incorrect username or password!';
+   } else {
+      $message[] = 'incorrect email or password!';
    }
-
 }
 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

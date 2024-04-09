@@ -8,46 +8,37 @@ if(isset($_SESSION['user_id'])){
    $user_id = $_SESSION['user_id'];
 }else{
    $user_id = '';
-};
+}
 
 if(isset($_POST['submit'])){
 
-   $name = $_POST['name'];
-   $name = filter_var($name, FILTER_SANITIZE_STRING);
-   $email = $_POST['email'];
-   $email = filter_var($email, FILTER_SANITIZE_STRING);
-   $number = $_POST['number'];
-   $number = filter_var($number, FILTER_SANITIZE_STRING);
-   $pass = sha1($_POST['pass']);
-   $pass = filter_var($pass, FILTER_SANITIZE_STRING);
-   $cpass = sha1($_POST['cpass']);
-   $cpass = filter_var($cpass, FILTER_SANITIZE_STRING);
+   $fname = filter_var($_POST['fname'], FILTER_SANITIZE_STRING); // Assuming 'fname' field for the first name
+   $lname = filter_var($_POST['lname'], FILTER_SANITIZE_STRING); // Assuming 'lname' field for the last name
+   $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+   $pass = $_POST['pass'];
+   $cpass = $_POST['cpass'];
 
-   $select_user = $conn->prepare("SELECT * FROM `users` WHERE email = ? OR number = ?");
-   $select_user->execute([$email, $number]);
-   $row = $select_user->fetch(PDO::FETCH_ASSOC);
-
-   if($select_user->rowCount() > 0){
-      $message[] = 'email or number already exists!';
-   }else{
-      if($pass != $cpass){
-         $message[] = 'confirm password not matched!';
+   if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+      $message[] = 'invalid email format!';
+   } else if($pass != $cpass){
+      $message[] = 'confirm password not matched!';
+   } else {
+      $select_user = $conn->prepare("SELECT * FROM `customers` WHERE Email = ?");
+      $select_user->execute([$email]);
+      if($select_user->rowCount() > 0){
+         $message[] = 'email already exists!';
       }else{
-         $insert_user = $conn->prepare("INSERT INTO `users`(name, email, number, password) VALUES(?,?,?,?)");
-         $insert_user->execute([$name, $email, $number, $cpass]);
-         $select_user = $conn->prepare("SELECT * FROM `users` WHERE email = ? AND password = ?");
-         $select_user->execute([$email, $pass]);
-         $row = $select_user->fetch(PDO::FETCH_ASSOC);
-         if($select_user->rowCount() > 0){
-            $_SESSION['user_id'] = $row['id'];
-            header('location:home.php');
-         }
+         $pass = password_hash($pass, PASSWORD_DEFAULT);
+         $insert_user = $conn->prepare("INSERT INTO `customers`(Email, Password, Fname, LName) VALUES(?,?,?,?)");
+         $insert_user->execute([$email, $pass, $fname, $lname]);
+         $_SESSION['user_id'] = $conn->lastInsertId();
+         header('location:home.php');
       }
    }
-
 }
 
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
