@@ -84,7 +84,7 @@ include 'components/add_cart.php';
 
 </section>
 
-<section class="category">
+<section class="category" 
 
    <h1 class="title">food category</h1>
 
@@ -117,47 +117,38 @@ include 'components/add_cart.php';
 
 
 
-<section class="products">
-
-   <h1 class="title">latest dishes</h1>
-
-   <div class="box-container">
-
-      <?php
-         $select_products = $conn->prepare("SELECT * FROM `products` LIMIT 6");
-         $select_products->execute();
-         if($select_products->rowCount() > 0){
-            while($fetch_products = $select_products->fetch(PDO::FETCH_ASSOC)){
-      ?>
-      <form action="" method="post" class="box">
-         <input type="hidden" name="pid" value="<?= $fetch_products['id']; ?>">
-         <input type="hidden" name="name" value="<?= $fetch_products['name']; ?>">
-         <input type="hidden" name="price" value="<?= $fetch_products['price']; ?>">
-         <input type="hidden" name="image" value="<?= $fetch_products['image']; ?>">
-         <a href="quick_view.php?pid=<?= $fetch_products['id']; ?>" class="fas fa-eye"></a>
-         <button type="submit" class="fas fa-shopping-cart" name="add_to_cart"></button>
-         <img src="uploaded_img/<?= $fetch_products['image']; ?>" alt="">
-         <a href="category.php?category=<?= $fetch_products['category']; ?>" class="cat"><?= $fetch_products['category']; ?></a>
-         <div class="name"><?= $fetch_products['name']; ?></div>
-         <div class="flex">
-            <div class="price"><span>$</span><?= $fetch_products['price']; ?></div>
-            <input type="number" name="qty" class="qty" min="1" max="99" value="1" maxlength="2">
-         </div>
-      </form>
-      <?php
+<section class="menu-items">
+    <h1 class="title">Featured Menu Items</h1>
+    <div class="box-container">
+        <?php
+        $select_menuitems = $conn->prepare("SELECT * FROM menuitems LIMIT 8"); // Example to limit to 8 items
+        $select_menuitems->execute();
+        if($select_menuitems->rowCount() > 0){
+            while($fetch_menuitem = $select_menuitems->fetch(PDO::FETCH_ASSOC)){
+        ?>
+        <div class="box">
+            <img src="uploaded_img/<?= $fetch_menuitem['Image']; ?>" alt="<?= htmlspecialchars($fetch_menuitem['DishName']); ?>">
+            <div class="content">
+                <h3><?= htmlspecialchars($fetch_menuitem['DishName']); ?></h3>
+                <span>$<?= number_format($fetch_menuitem['Price'], 2); ?></span>
+                <a href="menu.php?item=<?= $fetch_menuitem['ID']; ?>" class="btn">Order Now</a> <!-- Adjust as necessary -->
+            </div>
+        </div>
+        <?php
             }
-         }else{
-            echo '<p class="empty">no products added yet!</p>';
-         }
-      ?>
-
-   </div>
-
-   <div class="more-btn">
+        } else {
+            echo '<p class="empty">No menu items found!</p>';
+        }
+        ?>
+    </div>
+	  <div class="more-btn">
       <a href="menu.html" class="btn">veiw all</a>
    </div>
 
 </section>
+
+
+ 
 
 
 

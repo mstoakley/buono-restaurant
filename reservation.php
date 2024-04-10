@@ -19,7 +19,7 @@ if(isset($_SESSION['user_id'])){
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>about</title>
+   <title>Reservation</title>
 
    <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css" />
 
@@ -43,7 +43,7 @@ if(isset($_SESSION['user_id'])){
 
 <!-- about section starts  -->
 
-<section class="about">
+<section class="Reservation">
 
    <div class="row">
 
