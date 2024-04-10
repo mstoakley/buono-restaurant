@@ -91,12 +91,28 @@ CREATE TABLE `menuitems` (
 -- Dumping data for table `menuitems`
 --
 
+
 INSERT INTO `menuitems` (`ID`, `DishName`, `Origin`, `Vegetarian`, `Price`, `Image`) VALUES
-(1, 'Tour of Italy', 'Italy', 0, 21.00, ''),
-(2, 'Chicken and Shrimp Carbonara', 'Italy', 0, 21.00, ''),
-(3, 'Paella', 'Spain', 0, 15.00, ''),
-(4, 'Eggplant Parmigiana ', 'Italy', 1, 17.00, ''),
-(5, 'Tapas', 'Spain', 0, 14.00, '');
+(1, 'Tour of Italy', 'Italy', 0, 21.00, 'TIO'),
+(2, 'Chicken and Shrimp Carbonara', 'Italy', 0, 21.00, 'CSC'),
+(3, 'Paella', 'Spain', 0, 15.00, 'Pan'),
+(4, 'Eggplant Parmigiana ', 'Italy', 1, 17.00, 'EP'),
+(5, 'Tapas', 'Spain', 0, 14.00, 'Tap'),
+(6, 'Caramelized Onion Dip', 'USA', 1, 14.00, 'COD'),
+(7, 'Creamy Cavatappi', 'Italian', 1, 12.30, 'CC'),
+(8, 'Cream of Cauliflower Soup', 'French', 1, 16.20, 'CCS'),
+(9, 'Vegetable Soup', 'Roman', 1, 16.00, 'VS'),
+(10, 'Pumpkin Pancakes', 'Native', 1, 16.00, 'PP'),
+(11, 'Masala dosa', 'India', 1, 9.00, 'MD'),
+(12, 'Seafood paella', 'Spain', 0, 27.00, 'SP'),
+(13, 'Som tam', 'Thailand', 0, 16.00, 'ST'),
+(14, 'Poutine', 'Canada', 0, 14.00, 'PT'),
+(15, 'Stinky tofu', 'Southeast Asia', 1, 15.00, 'STA'),
+(16, 'Chili crab', 'Singapore', 0, 27.00, 'CC'),
+(17, 'Fish ‘n’ chips', ' United Kingdom', 0, 12.00, 'FNC'),
+(18, ' Bunny chow', 'South Africa', 0, 16.00, 'BC'),
+(19, 'Piri-piri chicken', 'Mozambique', 0, 15.00, 'PPC'),
+(20, 'Peking duck', 'China', 0, 30.00, 'PD');
 
 -- --------------------------------------------------------
 
