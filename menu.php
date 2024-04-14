@@ -48,7 +48,7 @@ include 'components/add_cart.php';
          <input type="hidden" name="image" value="<?= $fetch_menuitems['Image']; ?>">
          <a href="quick_view.php?pid=<?= $fetch_menuitems['ID']; ?>" class="fas fa-eye"></a>
          <button type="submit" class="fas fa-shopping-cart" name="add_to_cart"></button>
-         <img src="uploaded_img/<?= $fetch_menuitems['Image']; ?>" alt="">
+         <img src="FoodImages/<?= $fetch_menuitems['Image']; ?>" alt="<?= htmlspecialchars($fetch_menuitem['DishName']); ?>">
          <a href="category.php?category=<?= htmlspecialchars($fetch_menuitems['Origin'], ENT_QUOTES); ?>" class="cat"><?= htmlspecialchars($fetch_menuitems['Origin'], ENT_QUOTES); ?></a>
          <div class="name"><?= htmlspecialchars($fetch_menuitems['DishName'], ENT_QUOTES); ?></div>
          <div class="flex">

@@ -127,7 +127,7 @@ include 'components/add_cart.php';
             while($fetch_menuitem = $select_menuitems->fetch(PDO::FETCH_ASSOC)){
         ?>
         <div class="box">
-            <img src="uploaded_img/<?= $fetch_menuitem['Image']; ?>" alt="<?= htmlspecialchars($fetch_menuitem['DishName']); ?>">
+            <img src="FoodImages/<?= $fetch_menuitem['Image']; ?>" alt="<?= htmlspecialchars($fetch_menuitem['DishName']); ?>" width = "200" height = "200">
             <div class="content">
                 <h3><?= htmlspecialchars($fetch_menuitem['DishName']); ?></h3>
                 <span>$<?= number_format($fetch_menuitem['Price'], 2); ?></span>
@@ -142,7 +142,7 @@ include 'components/add_cart.php';
         ?>
     </div>
 	  <div class="more-btn">
-      <a href="menu.html" class="btn">veiw all</a>
+      <a href="menu.php" class="btn">view all</a>
    </div>
 
 </section>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 08, 2024 at 09:48 AM
+-- Generation Time: Apr 15, 2024 at 01:12 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -91,28 +91,27 @@ CREATE TABLE `menuitems` (
 -- Dumping data for table `menuitems`
 --
 
-
 INSERT INTO `menuitems` (`ID`, `DishName`, `Origin`, `Vegetarian`, `Price`, `Image`) VALUES
-(1, 'Tour of Italy', 'Italy', 0, 21.00, 'TIO'),
-(2, 'Chicken and Shrimp Carbonara', 'Italy', 0, 21.00, 'CSC'),
-(3, 'Paella', 'Spain', 0, 15.00, 'Pan'),
-(4, 'Eggplant Parmigiana ', 'Italy', 1, 17.00, 'EP'),
-(5, 'Tapas', 'Spain', 0, 14.00, 'Tap'),
-(6, 'Caramelized Onion Dip', 'USA', 1, 14.00, 'COD'),
-(7, 'Creamy Cavatappi', 'Italian', 1, 12.30, 'CC'),
-(8, 'Cream of Cauliflower Soup', 'French', 1, 16.20, 'CCS'),
-(9, 'Vegetable Soup', 'Roman', 1, 16.00, 'VS'),
-(10, 'Pumpkin Pancakes', 'Native', 1, 16.00, 'PP'),
-(11, 'Masala dosa', 'India', 1, 9.00, 'MD'),
-(12, 'Seafood paella', 'Spain', 0, 27.00, 'SP'),
-(13, 'Som tam', 'Thailand', 0, 16.00, 'ST'),
-(14, 'Poutine', 'Canada', 0, 14.00, 'PT'),
-(15, 'Stinky tofu', 'Southeast Asia', 1, 15.00, 'STA'),
-(16, 'Chili crab', 'Singapore', 0, 27.00, 'CC'),
-(17, 'Fish ‘n’ chips', ' United Kingdom', 0, 12.00, 'FNC'),
-(18, ' Bunny chow', 'South Africa', 0, 16.00, 'BC'),
-(19, 'Piri-piri chicken', 'Mozambique', 0, 15.00, 'PPC'),
-(20, 'Peking duck', 'China', 0, 30.00, 'PD');
+(1, 'Tour of Italy', 'Italy', 0, 21.00, 'TOI.jpg'),
+(2, 'Chicken and Shrimp Carbonara', 'Italy', 0, 21.00, 'CSC.jpg'),
+(3, 'Paella', 'Spain', 0, 15.00, 'Pan.jpg'),
+(4, 'Eggplant Parmigiana ', 'Italy', 1, 17.00, 'EP.jpg'),
+(5, 'Tapas', 'Spain', 0, 14.00, 'Tap.jpg'),
+(6, 'Caramelized Onion Dip', 'United States', 1, 14.00, 'COD.jpg'),
+(7, 'Creamy Cavatappi', 'Italy', 1, 12.30, 'CC.jpeg'),
+(8, 'Cream of Cauliflower Soup', 'French', 1, 16.20, 'CCS.jpg'),
+(9, 'Vegetable Soup', 'Italy', 1, 16.00, 'VS.jpg'),
+(10, 'Pumpkin Pancakes', 'United States', 1, 16.00, 'PP.jpg'),
+(11, 'Masala dosa', 'India', 1, 9.00, 'MD.jpg'),
+(12, 'Seafood paella', 'Spain', 0, 27.00, 'SP.jpg'),
+(13, 'Som tam', 'Southeast Asia', 0, 16.00, 'ST.jpg'),
+(14, 'Poutine', 'Canada', 0, 14.00, 'PT.jpg'),
+(15, 'Stinky tofu', 'Southeast Asia', 1, 15.00, 'STA.jpg'),
+(16, 'Chili crab', 'Southeast Asia', 0, 27.00, 'CC.jpg'),
+(17, 'Fish ‘n’ chips', ' United Kingdom', 0, 12.00, 'FNC.jpg'),
+(18, ' Bunny chow', 'Africa', 0, 16.00, 'BC.jpg'),
+(19, 'Piri-piri chicken', 'Africa', 0, 15.00, 'PPC.jpg'),
+(20, 'Peking duck', 'China', 0, 30.00, 'PD.jpg');
 
 -- --------------------------------------------------------
 
@@ -154,7 +153,7 @@ CREATE TABLE `reservations` (
   `DateofRes` datetime NOT NULL,
   `NumofGuests` int(11) NOT NULL,
   `CustomerID` int(11) NOT NULL
-) ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Triggers `reservations`
@@ -271,7 +270,7 @@ ALTER TABLE `customers`
 -- AUTO_INCREMENT for table `menuitems`
 --
 ALTER TABLE `menuitems`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `orderitems`
