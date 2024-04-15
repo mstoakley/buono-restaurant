@@ -121,7 +121,7 @@ include 'components/add_cart.php';
     <h1 class="title">Featured Menu Items</h1>
     <div class="box-container">
         <?php
-        $select_menuitems = $conn->prepare("SELECT * FROM menuitems LIMIT 8"); // Example to limit to 8 items
+        $select_menuitems = $conn->prepare("SELECT * FROM menuitems LIMIT 5"); 
         $select_menuitems->execute();
         if($select_menuitems->rowCount() > 0){
             while($fetch_menuitem = $select_menuitems->fetch(PDO::FETCH_ASSOC)){
@@ -131,7 +131,7 @@ include 'components/add_cart.php';
             <div class="content">
                 <h3><?= htmlspecialchars($fetch_menuitem['DishName']); ?></h3>
                 <span>$<?= number_format($fetch_menuitem['Price'], 2); ?></span>
-                <a href="menu.php?item=<?= $fetch_menuitem['ID']; ?>" class="btn">Order Now</a> <!-- Adjust as necessary -->
+                <a href="menu.php?item=<?= $fetch_menuitem['ID']; ?>" class="btn">Order Now</a> 
             </div>
         </div>
         <?php
