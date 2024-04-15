@@ -665,18 +665,7 @@ section{
    color:var(--black);
 }
 
-.search-form form .fa-search{
-   width: 6rem;
-   background-color: var(--black);
-   color:var(--white);
-   cursor: pointer;
-   font-size: 2.5rem;
-}
 
-.search-form form .fa-search:hover{
-   background-color: var(--yellow);
-   color:var(--black);
-}
 
 .checkout form{
    max-width: 50rem;

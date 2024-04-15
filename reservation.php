@@ -5,11 +5,37 @@ include 'components/connect.php';
 session_start();
 
 
-if(isset($_SESSION['user_id'])){
-   $user_id = $_SESSION['user_id'];
-}else{
-   $user_id = '';
-};
+if(!isset($_SESSION['user_id'])) {
+    header('location:home.php');
+    exit;
+}
+$user_id = $_SESSION['user_id'];
+$message = ""; // To store messages to display to the user
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
+    $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+    $phone = filter_input(INPUT_POST, 'phone', FILTER_SANITIZE_STRING);
+    $date = filter_input(INPUT_POST, 'date', FILTER_SANITIZE_STRING);
+    $time = filter_input(INPUT_POST, 'time', FILTER_SANITIZE_STRING);
+    $party_size = filter_input(INPUT_POST, 'party_size', FILTER_VALIDATE_INT);
+
+    // Combine date and time to fit the datetime format expected by SQL
+    $reservation_datetime = $date . ' ' . $time;
+
+    // Checking table availability
+    $stmt = $conn->prepare("CALL CheckTableAvailability(?, ?)");
+    $stmt->execute([$reservation_datetime, $party_size]);
+    $available = $stmt->fetch();
+
+    if ($available) {
+        // Proceed to add a new reservation
+        $addReservation = $conn->prepare("CALL AddNewReservation(?, ?, ?, ?)");
+        $addReservation->execute([$user_id, $available['table_id'], $reservation_datetime, $party_size]);
+        $message = "Reservation made successfully for {$date} at {$time}.";
+    } else {
+        $message = "No tables available for the selected date and time. Please choose another time.";
+    }
+}
 
 ?>
 
@@ -55,7 +81,7 @@ if(isset($_SESSION['user_id'])){
          <h3>Choose a Reservations Date!!!</h3>
          <p>Please  be patient, Reservations free up ANYTIME</p>
 
-   <form action="process_reservation.php" method="post">
+   <form action="reservation.php" method="post">
   <label for="name">Name:</label>
   <input type="text" id="name" name="name" required><br>
   <label for="email">Email:</label>

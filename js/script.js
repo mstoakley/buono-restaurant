@@ -28,7 +28,8 @@ function fadeOut(){
 window.onload = fadeOut;
 
 document.querySelectorAll('input[type="number"]').forEach(numberInput => {
-   numberInput.oninput = () =>{
-      if(numberInput.value.length > numberInput.maxLength) numberInput.value = numberInput.value.slice(0, numberInput.maxLength);
-   };
+    numberInput.oninput = () => {
+        if (numberInput.value < 1) numberInput.value = 1;
+        if (numberInput.value > 99) numberInput.value = 99;
+    };
 });
