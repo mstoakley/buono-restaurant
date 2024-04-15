@@ -10,12 +10,10 @@ if(!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 
 if(isset($_POST['submit'])) {
-   $address = filter_var($_POST['address'], FILTER_SANITIZE_STRING);
+   
    $total_price = $_POST['total_price'];
 
-   if(empty($address)){
-      $message[] = 'Please add your address!';
-   } else {
+   
       $current_date = date('Y-m-d H:i:s');
       $insert_order = $conn->prepare("INSERT INTO orders (CustomerID, OrderDate, `Total Amount`) VALUES (?, ?, ?)");
       $insert_order->execute([$user_id, $current_date, $total_price]);
@@ -25,7 +23,7 @@ if(isset($_POST['submit'])) {
       $delete_cart->execute([$user_id]);
 
       $message[] = 'Order placed successfully. Please pay at pickup!';
-   }
+   
 }
 ?>
 
@@ -54,7 +52,7 @@ if(isset($_POST['submit'])) {
            if($select_cart->rowCount() > 0){
                while($fetch_cart = $select_cart->fetch(PDO::FETCH_ASSOC)){
                    $grand_total += ($fetch_cart['Price'] * $fetch_cart['Quantity']);
-                   echo '<p><span class="name">'.$fetch_cart['name'].'</span><span class="price">$'.$fetch_cart['Price'].' x '.$fetch_cart['Quantity'].'</span></p>';
+                   echo '<p><span class="price">$'.$fetch_cart['Price'].' x '.$fetch_cart['Quantity'].'</span></p>';
                }
            } else {
                echo '<p class="empty">Your cart is empty!</p>';
@@ -65,7 +63,6 @@ if(isset($_POST['submit'])) {
        </div>
        
        <input type="hidden" name="total_price" value="<?= $grand_total; ?>">
-       <input type="text" name="address" required placeholder="Enter your delivery address" class="box">
        <input type="submit" value="Place order" class="btn" name="submit">
    </form>
 </section>

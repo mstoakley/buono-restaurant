@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 16, 2024 at 12:20 AM
+-- Generation Time: Apr 16, 2024 at 12:59 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -75,7 +75,7 @@ CREATE TABLE `customers` (
 --
 
 INSERT INTO `customers` (`ID`, `Email`, `Password`, `Fname`, `LName`) VALUES
-(1, 'mariahstoakley@gmail.com', '$2y$10$KXC.Eevn', '', '');
+(1, 'mariahstoakley@gmail.com', '$2y$10$KXC.Eevn', 'Mariah', '');
 
 -- --------------------------------------------------------
 
@@ -146,6 +146,13 @@ CREATE TABLE `orders` (
   `Total Amount` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`ID`, `CustomerID`, `OrderDate`, `Total Amount`) VALUES
+(1, 1, '2024-04-16 00:59:04', 42);
+
 -- --------------------------------------------------------
 
 --
@@ -159,6 +166,13 @@ CREATE TABLE `reservations` (
   `NumofGuests` int(11) NOT NULL,
   `CustomerID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `reservations`
+--
+
+INSERT INTO `reservations` (`ID`, `TableID`, `DateofRes`, `NumofGuests`, `CustomerID`) VALUES
+(1, 1, '2024-04-16 18:30:00', 2, 1);
 
 --
 -- Triggers `reservations`
@@ -281,19 +295,19 @@ ALTER TABLE `menuitems`
 -- AUTO_INCREMENT for table `orderitems`
 --
 ALTER TABLE `orderitems`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `reservations`
 --
 ALTER TABLE `reservations`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `tablenumbers`

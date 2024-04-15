@@ -12,7 +12,7 @@ if(isset($_SESSION['user_id'])){
 }
 
 if(isset($_POST['delete'])){
-   $item_id = $_POST['item_id']; // Assuming the form sends the ID of the item in the orderitems table
+   $item_id = $_POST['item_id']; 
    $delete_cart_item = $conn->prepare("DELETE FROM `orderitems` WHERE ID = ? AND CustomerID = ?");
    $delete_cart_item->execute([$item_id, $user_id]);
    $message[] = 'cart item deleted!';
@@ -21,12 +21,12 @@ if(isset($_POST['delete'])){
 if(isset($_POST['delete_all'])){
    $delete_cart_items = $conn->prepare("DELETE FROM `orderitems` WHERE CustomerID = ?");
    $delete_cart_items->execute([$user_id]);
-   // Optionally redirect or confirm to the user
+   
    $message[] = 'all items deleted from cart!';
 }
 
 if(isset($_POST['update_qty'])){
-   $item_id = $_POST['item_id']; // Adjusted to 'item_id' for clarity
+   $item_id = $_POST['item_id']; 
    $qty = $_POST['qty'];
    $qty = filter_var($qty, FILTER_VALIDATE_INT); // Using FILTER_VALIDATE_INT for better validation
    if($qty > 0){
@@ -38,7 +38,7 @@ if(isset($_POST['update_qty'])){
    }
 }
 
-$grand_total = 0; // Assuming you might calculate this later in the script
+$grand_total = 0; 
 
 ?>
 
@@ -81,14 +81,17 @@ $grand_total = 0; // Assuming you might calculate this later in the script
 $grand_total = 0;
 $select_order_items = $conn->prepare("SELECT o.ID, o.Quantity, o.Price, m.DishName, m.Image FROM orderitems o INNER JOIN menuitems m ON o.MenuID = m.ID WHERE o.CustomerID = ?");
 $select_order_items->execute([$user_id]);
+
 if($select_order_items->rowCount() > 0){
    while($fetch_order_item = $select_order_items->fetch(PDO::FETCH_ASSOC)){
+
 ?>
 <form action="" method="post" class="box">
    <input type="hidden" name="item_id" value="<?= $fetch_order_item['ID']; ?>">
-   <a href="quick_view.php?pid=<?= $fetch_order_item['MenuID']; ?>" class="fas fa-eye"></a>
+   <a href="quick_view.php?pid=<?= $fetch_order_item['ID']; ?>" class="fas fa-eye"></a>
+
    <button type="submit" class="fas fa-times" name="delete" onclick="return confirm('delete this item?');"></button>
-   <img src="uploaded_img/<?= $fetch_order_item['Image']; ?>" alt="">
+   <img src="FoodImages/<?= $fetch_order_item['Image']; ?>" alt="">
    <div class="name"><?= $fetch_order_item['DishName']; ?></div>
    <div class="flex">
       <div class="price"><span>$</span><?= $fetch_order_item['Price']; ?></div>
