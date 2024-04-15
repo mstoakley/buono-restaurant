@@ -3,25 +3,25 @@
    <section class="grid">
 
       <div class="box">
-         <img src="images/email-icon.png" alt="">
+         <img src="FoodImages/email-icon.png" alt="">
          <h3>our email</h3>
          <a href="mailto:shaikhanas@gmail.com">buonohouston@gmail.com</a>
       </div>
 
       <div class="box">
-         <img src="images/clock-icon.png" alt="">
+         <img src="FoodImages/clock-icon.png" alt="">
          <h3>opening hours</h3>
          <p>12:00 pm to 10:00pm</p>
       </div>
 
       <div class="box">
-         <img src="images/map-icon.png" alt="">
+         <img src="FoodImages/map-icon.png" alt="">
          <h3>our address</h3>
          <a href="#">Houston Texas, 936 PV Ln4</a>
       </div>
 
       <div class="box">
-         <img src="images/phone-icon.png" alt="">
+         <img src="FoodImages/phone-icon.png" alt="">
          <h3>our number</h3>
          <a href="tel:1234567890">123-456-7890</a>
          

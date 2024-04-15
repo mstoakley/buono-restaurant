@@ -26,12 +26,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt = $conn->prepare("CALL CheckTableAvailability(?, ?)");
     $stmt->execute([$reservation_datetime, $party_size]);
     $available = $stmt->fetch();
+	$stmt->closeCursor();
 
     if ($available) {
         // Proceed to add a new reservation
         $addReservation = $conn->prepare("CALL AddNewReservation(?, ?, ?, ?)");
-        $addReservation->execute([$user_id, $available['table_id'], $reservation_datetime, $party_size]);
+        $addReservation->execute([$user_id, $available['ID'], $reservation_datetime, $party_size]);
         $message = "Reservation made successfully for {$date} at {$time}.";
+		$addReservation->closeCursor();
     } else {
         $message = "No tables available for the selected date and time. Please choose another time.";
     }
@@ -115,21 +117,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
    <div class="box-container">
 
       <div class="box">
-         <img src="images/step-1.png" alt="">
+         <img src="FoodImages/step-1.png" alt="">
          <h3>choose order</h3>
-         <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nesciunt, dolorem.</p>
       </div>
 
       <div class="box">
-         <img src="images/step-2.png" alt="">
+         <img src="FoodImages/clock-icon.png" alt="">
          <h3>or Make a Reservation</h3>
-         <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nesciunt, dolorem.</p>
       </div>
 
       <div class="box">
-         <img src="images/step-3.png" alt="">
+         <img src="FoodImages/step-3.png" alt="">
          <h3>enjoy food</h3>
-         <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nesciunt, dolorem.</p>
       </div>
 
    </div>

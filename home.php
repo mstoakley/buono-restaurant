@@ -46,33 +46,33 @@ include 'components/add_cart.php';
          <div class="swiper-slide slide">
             <div class="content">
                <span>order online</span>
-               <h3>delicious foods all over the world !!</h3>
+               <h3>Delicious Foods All Over the World !!</h3>
                <a href="menu.html" class="btn">see menus</a>
             </div>
             <div class="image">
-               <img src="images/home-img-1.png" alt="">
+               <img src="FoodImages/home-img-1.png" alt="">
             </div>
          </div>
 
          <div class="swiper-slide slide">
             <div class="content">
                <span>order online</span>
-               <h3>chezzy hamburger</h3>
+               <h3>Cheesy Burger</h3>
                <a href="menu.html" class="btn">see menus</a>
             </div>
             <div class="image">
-               <img src="images/home-img-2.png" alt="">
+               <img src="FoodImages/home-img-2.png" alt="">
             </div>
          </div>
 
          <div class="swiper-slide slide">
             <div class="content">
                <span>order online</span>
-               <h3>rosted chicken</h3>
+               <h3>Roasted chicken</h3>
                <a href="menu.html" class="btn">see menus</a>
             </div>
             <div class="image">
-               <img src="images/home-img-3.png" alt="">
+               <img src="FoodImages/home-img-3.png" alt="">
             </div>
          </div>
 
@@ -86,28 +86,28 @@ include 'components/add_cart.php';
 
 <section class="category" 
 
-   <h1 class="title">food category</h1>
+     <h1 class="title">food category</h1>
 
    <div class="box-container">
 
-      <a href="category.php?category=fast food" class="box">
-         <img src="images/cat-1.png" alt="">
-         <h3>fast food</h3>
+      <a href="category.php?category=Spain" class="box">
+         <img src="FoodImages/cat-1.png" alt="">
+         <h3>Spain</h3>
       </a>
 
-      <a href="category.php?category=main dish" class="box">
-         <img src="images/cat-2.png" alt="">
-         <h3>main dishes</h3>
+      <a href="category.php?category=Italy" class="box">
+         <img src="FoodImages/cat-2.png" alt="">
+         <h3>Italy</h3>
       </a>
 
-      <a href="category.php?category=drinks" class="box">
-         <img src="images/cat-3.png" alt="">
-         <h3>drinks</h3>
+      <a href="category.php?category=India" class="box">
+         <img src="FoodImages/cat-3.png" alt="">
+         <h3>India</h3>
       </a>
 
-      <a href="category.php?category=desserts" class="box">
-         <img src="images/cat-4.png" alt="">
-         <h3>desserts</h3>
+      <a href="category.php?category=United States" class="box">
+         <img src="FoodImages/cat-4.png" alt="">
+         <h3>United States</h3>
       </a>
 
    </div>

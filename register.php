@@ -12,8 +12,8 @@ if(isset($_SESSION['user_id'])){
 
 if(isset($_POST['submit'])){
 
-   $fname = filter_var($_POST['fname'], FILTER_SANITIZE_STRING); // Assuming 'fname' field for the first name
-   $lname = filter_var($_POST['lname'], FILTER_SANITIZE_STRING); // Assuming 'lname' field for the last name
+   $fname = filter_var($_POST['Fname'], FILTER_SANITIZE_STRING); // Assuming 'fname' field for the first name
+   $lname = filter_var($_POST['LName'], FILTER_SANITIZE_STRING); // Assuming 'lname' field for the last name
    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
    $pass = $_POST['pass'];
    $cpass = $_POST['cpass'];

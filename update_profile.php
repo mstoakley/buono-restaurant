@@ -1,82 +1,66 @@
 <?php
-
-include 'components/connect.php';
-
 session_start();
 
-if(isset($_SESSION['user_id'])){
-   $user_id = $_SESSION['user_id'];
-}else{
-   $user_id = '';
-   header('location:home.php');
-};
-
-if(isset($_POST['submit'])){
-
-   $name = $_POST['name'];
-   $name = filter_var($name, FILTER_SANITIZE_STRING);
-
-   $email = $_POST['email'];
-   $email = filter_var($email, FILTER_SANITIZE_STRING);
-   $number = $_POST['number'];
-   $number = filter_var($number, FILTER_SANITIZE_STRING);
-
-   if(!empty($name)){
-      $update_name = $conn->prepare("UPDATE `users` SET name = ? WHERE id = ?");
-      $update_name->execute([$name, $user_id]);
-   }
-
-   if(!empty($email)){
-      $select_email = $conn->prepare("SELECT * FROM `users` WHERE email = ?");
-      $select_email->execute([$email]);
-      if($select_email->rowCount() > 0){
-         $message[] = 'email already taken!';
-      }else{
-         $update_email = $conn->prepare("UPDATE `users` SET email = ? WHERE id = ?");
-         $update_email->execute([$email, $user_id]);
-      }
-   }
-
-   if(!empty($number)){
-      $select_number = $conn->prepare("SELECT * FROM `users` WHERE number = ?");
-      $select_number->execute([$number]);
-      if($select_number->rowCount() > 0){
-         $message[] = 'number already taken!';
-      }else{
-         $update_number = $conn->prepare("UPDATE `users` SET number = ? WHERE id = ?");
-         $update_number->execute([$number, $user_id]);
-      }
-   }
-   
-   $empty_pass = 'da39a3ee5e6b4b0d3255bfef95601890afd80709';
-   $select_prev_pass = $conn->prepare("SELECT password FROM `users` WHERE id = ?");
-   $select_prev_pass->execute([$user_id]);
-   $fetch_prev_pass = $select_prev_pass->fetch(PDO::FETCH_ASSOC);
-   $prev_pass = $fetch_prev_pass['password'];
-   $old_pass = sha1($_POST['old_pass']);
-   $old_pass = filter_var($old_pass, FILTER_SANITIZE_STRING);
-   $new_pass = sha1($_POST['new_pass']);
-   $new_pass = filter_var($new_pass, FILTER_SANITIZE_STRING);
-   $confirm_pass = sha1($_POST['confirm_pass']);
-   $confirm_pass = filter_var($confirm_pass, FILTER_SANITIZE_STRING);
-
-   if($old_pass != $empty_pass){
-      if($old_pass != $prev_pass){
-         $message[] = 'old password not matched!';
-      }elseif($new_pass != $confirm_pass){
-         $message[] = 'confirm password not matched!';
-      }else{
-         if($new_pass != $empty_pass){
-            $update_pass = $conn->prepare("UPDATE `users` SET password = ? WHERE id = ?");
-            $update_pass->execute([$confirm_pass, $user_id]);
-            $message[] = 'password updated successfully!';
-         }else{
-            $message[] = 'please enter a new password!';
-         }
-      }
-   }  
-
+if (!isset($_SESSION['user_id'])) {
+    header('location:home.php');
+    exit;
 }
+$user_id = $_SESSION['user_id'];
+$message = []; // Initialize as array to avoid undefined variable issues
+
+// Assuming you have included the database connection already
+include 'components/connect.php';
+
+if (isset($_POST['submit'])) {
+    $name = filter_var($_POST['name'], FILTER_SANITIZE_STRING);
+    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+    
+
+    // Update Name
+    if (!empty($name)) {
+        $update_name = $conn->prepare("UPDATE customers SET Fname = ? WHERE ID = ?");
+        $update_name->execute([$name, $user_id]);
+    }
+
+    // Update Email after checking its uniqueness
+    if (!empty($email)) {
+        $select_email = $conn->prepare("SELECT ID FROM customers WHERE Email = ? AND ID != ?");
+        $select_email->execute([$email, $user_id]);
+        if ($select_email->rowCount() > 0) {
+            $message[] = 'Email already taken!';
+        } else {
+            $update_email = $conn->prepare("UPDATE customers SET Email = ? WHERE ID = ?");
+            $update_email->execute([$email, $user_id]);
+        }
+    }
+
+
+    // Update Password if old password matches
+    if (!empty($_POST['old_pass']) && !empty($_POST['new_pass']) && !empty($_POST['confirm_pass'])) {
+        $old_pass = sha1($_POST['old_pass']);
+        $new_pass = sha1($_POST['new_pass']);
+        $confirm_pass = sha1($_POST['confirm_pass']);
+
+        $select_prev_pass = $conn->prepare("SELECT Password FROM customers WHERE ID = ?");
+        $select_prev_pass->execute([$user_id]);
+        $fetch_prev_pass = $select_prev_pass->fetch(PDO::FETCH_ASSOC);
+
+        if ($old_pass != $fetch_prev_pass['Password']) {
+            $message[] = 'Old password not matched!';
+        } elseif ($new_pass != $confirm_pass) {
+            $message[] = 'Confirm password not matched!';
+        } else {
+            $update_pass = $conn->prepare("UPDATE customers SET Password = ? WHERE ID = ?");
+            $update_pass->execute([$confirm_pass, $user_id]);
+            $message[] = 'Password updated successfully!';
+        }
+    }
+}
+
+// Load user info for placeholders
+$select_profile = $conn->prepare("SELECT * FROM customers WHERE ID = ?");
+$select_profile->execute([$user_id]);
+$fetch_profile = $select_profile->fetch(PDO::FETCH_ASSOC);
 
 ?>
 
@@ -105,9 +89,8 @@ if(isset($_POST['submit'])){
 
    <form action="" method="post">
       <h3>update profile</h3>
-      <input type="text" name="name" placeholder="<?= $fetch_profile['name']; ?>" class="box" maxlength="50">
-      <input type="email" name="email" placeholder="<?= $fetch_profile['email']; ?>" class="box" maxlength="50" oninput="this.value = this.value.replace(/\s/g, '')">
-      <input type="number" name="number" placeholder="<?= $fetch_profile['number']; ?>"" class="box" min="0" max="9999999999" maxlength="10">
+      <input type="text" name="name" placeholder="<?= $fetch_profile['Fname']; ?>" class="box" maxlength="50">
+      <input type="email" name="email" placeholder="<?= $fetch_profile['Email']; ?>" class="box" maxlength="50" oninput="this.value = this.value.replace(/\s/g, '')">
       <input type="password" name="old_pass" placeholder="enter your old password" class="box" maxlength="50" oninput="this.value = this.value.replace(/\s/g, '')">
       <input type="password" name="new_pass" placeholder="enter your new password" class="box" maxlength="50" oninput="this.value = this.value.replace(/\s/g, '')">
       <input type="password" name="confirm_pass" placeholder="confirm your new password" class="box" maxlength="50" oninput="this.value = this.value.replace(/\s/g, '')">
