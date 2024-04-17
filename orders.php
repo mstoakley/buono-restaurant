@@ -46,31 +46,45 @@ if(isset($_SESSION['user_id'])){
    <div class="box-container">
 
    <?php
-      if($user_id == ''){
-         echo '<p class="empty">please login to see your orders</p>';
-      }else{
-         $select_orders = $conn->prepare("SELECT * FROM `orders` WHERE user_id = ?");
-         $select_orders->execute([$user_id]);
-         if($select_orders->rowCount() > 0){
-            while($fetch_orders = $select_orders->fetch(PDO::FETCH_ASSOC)){
-   ?>
-   <div class="box">
-      <p>placed on : <span><?= $fetch_orders['placed_on']; ?></span></p>
-      <p>name : <span><?= $fetch_orders['name']; ?></span></p>
-      <p>email : <span><?= $fetch_orders['email']; ?></span></p>
-      <p>number : <span><?= $fetch_orders['number']; ?></span></p>
-      <p>address : <span><?= $fetch_orders['address']; ?></span></p>
-      <p>payment method : <span><?= $fetch_orders['method']; ?></span></p>
-      <p>your orders : <span><?= $fetch_orders['total_products']; ?></span></p>
-      <p>total price : <span>$<?= $fetch_orders['total_price']; ?>/-</span></p>
-      <p> payment status : <span style="color:<?php if($fetch_orders['payment_status'] == 'pending'){ echo 'red'; }else{ echo 'green'; }; ?>"><?= $fetch_orders['payment_status']; ?></span> </p>
-   </div>
-   <?php
-      }
-      }else{
-         echo '<p class="empty">no orders placed yet!</p>';
-      }
-      }
+     if ($user_id != '') {
+    $stmt = $conn->prepare("
+SELECT 
+    o.ID,
+    o.OrderDate,
+    o.TotalAmount,
+    i.Quantity,
+    i.Price,
+    m.DishName
+FROM 
+    Orders o
+JOIN 
+    OrderItems i ON o.ID = i.OrderID
+JOIN 
+    MenuItems m ON i.MenuID = m.ID
+WHERE 
+    o.CustomerID = ?
+ORDER BY 
+    o.OrderDate DESC;");
+    $stmt->execute([$user_id]);
+    if ($stmt->rowCount() > 0) {
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            echo "<div class='order-box'>";
+            echo "<p>Ordered On: " . $row['OrderDate'] . "</p>";
+            echo "<p>Dish Name: " . $row['DishName'] . "</p>";
+            echo "<p>Quantity: " . $row['Quantity'] . "</p>";
+            echo "<p>Price per Item: $" . $row['Price'] . "</p>";
+            echo "<p>Subtotal: $" . ($row['Quantity'] * $row['Price']) . "</p>";
+            echo "<p>Grand Total: $" . $row['TotalAmount'] . "</p>";
+            echo "</div>";
+        }
+    } else {
+        echo '<p class="empty">No orders placed yet!!</p>';
+    }
+} else {
+    header('location:login.php');
+    exit;
+}
+
    ?>
 
    </div>

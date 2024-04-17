@@ -1,36 +1,36 @@
 <?php
 
+include 'components/connect.php';
 if(isset($_POST['add_to_cart'])){
 
-   if($user_id == ''){
-      header('location:login.php');
-   }else{
+if(!isset($_SESSION['user_id'])){
+    header('location:login.php');
+    exit;
+}else{
+	$user_id = $_SESSION['user_id'];
+$pid = filter_input(INPUT_POST, 'pid', FILTER_SANITIZE_NUMBER_INT);
+$name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
+$price = filter_input(INPUT_POST, 'price', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+$qty = filter_input(INPUT_POST, 'qty', FILTER_VALIDATE_INT);
 
-      $pid = $_POST['pid'];
-      $pid = filter_var($pid, FILTER_SANITIZE_STRING);
-      $name = $_POST['name'];
-      $name = filter_var($name, FILTER_SANITIZE_STRING);
-      $price = $_POST['price'];
-      $price = filter_var($price, FILTER_SANITIZE_STRING);
-      $image = $_POST['image'];
-      $image = filter_var($image, FILTER_SANITIZE_STRING);
-      $qty = $_POST['qty'];
-      $qty = filter_var($qty, FILTER_SANITIZE_STRING);
+// Check if item already exists in the temporary cart
+$check_cart_item = $conn->prepare("SELECT * FROM `cart` WHERE CustomerID = ? AND MenuID = ?");
+$check_cart_item->execute([$user_id, $pid]);
 
-      $check_cart_numbers = $conn->prepare("SELECT * FROM `orderitems` WHERE CustomerID = ?");
-      $check_cart_numbers->execute([$user_id]);
+if($check_cart_item->rowCount() > 0){
+    $message[] = 'Item already added to cart!';
+} else {
+    // Insert item into the temporary cart table
+	echo("Attempting to insert into cart: PID={$pid}, Name={$name}, Price={$price}, Qty={$qty}");
 
-      if($check_cart_numbers->rowCount() > 0){
-         $message[] = 'already added to cart!';
-      }else{
-         $insert_cart = $conn->prepare("INSERT INTO `orderitems`(CustomerID, MenuID, Price, Quantity, Image) VALUES(?,?,?,?,?)");
-         $insert_cart->execute([$user_id, $pid,$price, $qty, $image]);
-         $message[] = 'added to cart!';
-         
-      }
-
-   }
-
+    $insert_cart = $conn->prepare("INSERT INTO `cart`(CustomerID, MenuID, Price, Quantity) VALUES(?,?,?,?)");
+    $insert_cart->execute([$user_id, $pid, $price, $qty]);
+    $message[] = 'Added to cart successfully!';
 }
 
+	
+}
+
+}
 ?>
+

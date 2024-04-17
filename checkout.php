@@ -2,39 +2,46 @@
 include 'components/connect.php';
 session_start();
 
-if(!isset($_SESSION['user_id'])) {
+if(isset($_SESSION['user_id'])){
+   $user_id = $_SESSION['user_id'];
+}else{
+   $user_id = '';
    header('location:home.php');
-   exit;
-}
-
-$user_id = $_SESSION['user_id'];
+};
 
 if(isset($_POST['submit'])) {
-   
-   $total_price = $_POST['total_price'];
+  $total_price = $_POST['total_price'];
+    $conn->beginTransaction();
+    try {
+        $insert_order = $conn->prepare("INSERT INTO orders (CustomerID, OrderDate, TotalAmount) VALUES (?, NOW(), ?)");
+        $insert_order->execute([$user_id, $total_price]);
+        $order_id = $conn->lastInsertId();
 
-   
-      $current_date = date('Y-m-d H:i:s');
-      $insert_order = $conn->prepare("INSERT INTO orders (CustomerID, OrderDate, `Total Amount`) VALUES (?, ?, ?)");
-      $insert_order->execute([$user_id, $current_date, $total_price]);
+        // Transfer items from cart to orderitems
+        $transfer_items = $conn->prepare("INSERT INTO orderitems (OrderID, MenuID, Quantity, Price,CustomerID) SELECT ?, MenuID, Quantity, Price, CustomerID FROM cart WHERE CustomerID = ?");
+        $transfer_items->execute([$order_id, $user_id]);
 
-      // Assuming you clear the orderitems after placing an order
-      $delete_cart = $conn->prepare("DELETE FROM orderitems WHERE CustomerID = ?");
-      $delete_cart->execute([$user_id]);
+        // Clear the cart
+        $clear_cart = $conn->prepare("DELETE FROM `cart` WHERE CustomerID = ?");
+        $clear_cart->execute([$user_id]);
 
-      $message[] = 'Order placed successfully. Please pay at pickup!';
-   
+        $conn->commit();
+        $message[] = 'Order placed successfully!';
+    } catch (PDOException $e) {
+        $conn->rollBack();
+        $message[] = 'Failed to place order: ' . $e->getMessage();
+    }
 }
+
+
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
- 
-   <!-- font awesome cdn link  -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-
-   <!-- custom css file link  -->
    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -47,7 +54,7 @@ if(isset($_POST['submit'])) {
            <h3>Cart Items</h3>
            <?php
            $grand_total = 0;
-           $select_cart = $conn->prepare("SELECT * FROM orderitems WHERE CustomerID = ?");
+           $select_cart = $conn->prepare("SELECT * FROM cart WHERE CustomerID = ?");
            $select_cart->execute([$user_id]);
            if($select_cart->rowCount() > 0){
                while($fetch_cart = $select_cart->fetch(PDO::FETCH_ASSOC)){
@@ -71,3 +78,4 @@ if(isset($_POST['submit'])) {
 <script src="js/script.js"></script>
 </body>
 </html>
+

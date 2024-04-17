@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 16, 2024 at 12:59 AM
+-- Generation Time: Apr 17, 2024 at 02:31 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -59,6 +59,21 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `cart`
+--
+
+CREATE TABLE `cart` (
+  `CartID` int(11) NOT NULL,
+  `CustomerID` int(11) DEFAULT NULL,
+  `MenuID` int(11) DEFAULT NULL,
+  `Quantity` int(11) DEFAULT NULL,
+  `Price` decimal(10,2) DEFAULT NULL,
+  `AddedOn` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `customers`
 --
 
@@ -75,7 +90,8 @@ CREATE TABLE `customers` (
 --
 
 INSERT INTO `customers` (`ID`, `Email`, `Password`, `Fname`, `LName`) VALUES
-(1, 'mariahstoakley@gmail.com', '$2y$10$KXC.Eevn', 'Mariah', '');
+(1, 'mariahstoakley@gmail.com', '$2y$10$KXC.Eevn', 'Mariah', ''),
+(2, 'testing@gmail.com', '$2y$10$Jj3kBDu9', '', '');
 
 -- --------------------------------------------------------
 
@@ -126,12 +142,21 @@ INSERT INTO `menuitems` (`ID`, `DishName`, `Origin`, `Vegetarian`, `Price`, `Ima
 
 CREATE TABLE `orderitems` (
   `ID` int(11) NOT NULL,
+  `OrderID` int(11) DEFAULT NULL,
   `CustomerID` int(11) NOT NULL,
   `MenuID` int(11) NOT NULL,
   `Price` int(11) NOT NULL,
-  `Quantity` int(10) NOT NULL,
-  `Image` varchar(15) NOT NULL
+  `Quantity` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `orderitems`
+--
+
+INSERT INTO `orderitems` (`ID`, `OrderID`, `CustomerID`, `MenuID`, `Price`, `Quantity`) VALUES
+(13, NULL, 1, 3, 15, 1),
+(14, NULL, 2, 2, 21, 2),
+(15, NULL, 2, 1, 21, 1);
 
 -- --------------------------------------------------------
 
@@ -143,15 +168,17 @@ CREATE TABLE `orders` (
   `ID` int(11) NOT NULL,
   `CustomerID` int(11) NOT NULL,
   `OrderDate` datetime NOT NULL,
-  `Total Amount` float NOT NULL
+  `TotalAmount` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `orders`
 --
 
-INSERT INTO `orders` (`ID`, `CustomerID`, `OrderDate`, `Total Amount`) VALUES
-(1, 1, '2024-04-16 00:59:04', 42);
+INSERT INTO `orders` (`ID`, `CustomerID`, `OrderDate`, `TotalAmount`) VALUES
+(2, 1, '2024-04-17 01:35:38', 16),
+(3, 1, '2024-04-17 01:38:52', 99),
+(4, 1, '2024-04-17 01:56:28', 42);
 
 -- --------------------------------------------------------
 
@@ -235,6 +262,14 @@ INSERT INTO `tablenumbers` (`ID`, `NumofSeats`) VALUES
 --
 
 --
+-- Indexes for table `cart`
+--
+ALTER TABLE `cart`
+  ADD PRIMARY KEY (`CartID`),
+  ADD KEY `CustomerID` (`CustomerID`),
+  ADD KEY `MenuID` (`MenuID`);
+
+--
 -- Indexes for table `customers`
 --
 ALTER TABLE `customers`
@@ -252,7 +287,8 @@ ALTER TABLE `menuitems`
 ALTER TABLE `orderitems`
   ADD PRIMARY KEY (`ID`),
   ADD KEY `MenuItem` (`MenuID`),
-  ADD KEY `IndividualCustItem` (`CustomerID`) USING BTREE;
+  ADD KEY `IndividualCustItem` (`CustomerID`) USING BTREE,
+  ADD KEY `Order Number per Item` (`OrderID`);
 
 --
 -- Indexes for table `orders`
@@ -280,10 +316,16 @@ ALTER TABLE `tablenumbers`
 --
 
 --
+-- AUTO_INCREMENT for table `cart`
+--
+ALTER TABLE `cart`
+  MODIFY `CartID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `menuitems`
@@ -295,13 +337,13 @@ ALTER TABLE `menuitems`
 -- AUTO_INCREMENT for table `orderitems`
 --
 ALTER TABLE `orderitems`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `reservations`
@@ -320,11 +362,19 @@ ALTER TABLE `tablenumbers`
 --
 
 --
+-- Constraints for table `cart`
+--
+ALTER TABLE `cart`
+  ADD CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`CustomerID`) REFERENCES `customers` (`ID`),
+  ADD CONSTRAINT `cart_ibfk_2` FOREIGN KEY (`MenuID`) REFERENCES `menuitems` (`ID`);
+
+--
 -- Constraints for table `orderitems`
 --
 ALTER TABLE `orderitems`
   ADD CONSTRAINT `orderitems_ibfk_2` FOREIGN KEY (`MenuID`) REFERENCES `menuitems` (`ID`) ON DELETE NO ACTION ON UPDATE CASCADE,
-  ADD CONSTRAINT `orderitems_ibfk_3` FOREIGN KEY (`CustomerID`) REFERENCES `customers` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `orderitems_ibfk_3` FOREIGN KEY (`CustomerID`) REFERENCES `customers` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `orderitems_ibfk_4` FOREIGN KEY (`OrderID`) REFERENCES `orders` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `orders`

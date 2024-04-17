@@ -27,7 +27,7 @@ if (isset($message) && is_array($message)) {
 
       <div class="icons">
          <?php
-            $count_cart_items = $conn->prepare("SELECT * FROM `orderitems` WHERE CustomerID = ?");
+            $count_cart_items = $conn->prepare("SELECT * FROM `cart` WHERE CustomerID = ?");
             $count_cart_items->execute([$user_id]);
             $total_cart_items = $count_cart_items->rowCount();
          ?>
