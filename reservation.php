@@ -1,43 +1,62 @@
 <?php
-
 include 'components/connect.php';
 
 session_start();
 
-
-if(!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['user_id'])) {
     header('location:home.php');
     exit;
 }
+
 $user_id = $_SESSION['user_id'];
 $message = ""; // To store messages to display to the user
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
-    $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
-    $phone = filter_input(INPUT_POST, 'phone', FILTER_SANITIZE_STRING);
-    $date = filter_input(INPUT_POST, 'date', FILTER_SANITIZE_STRING);
-    $time = filter_input(INPUT_POST, 'time', FILTER_SANITIZE_STRING);
-    $party_size = filter_input(INPUT_POST, 'party_size', FILTER_VALIDATE_INT);
 
-    // Combine date and time to fit the datetime format expected by SQL
-    $reservation_datetime = $date . ' ' . $time;
+    if (isset($_POST['make_reservation'])) {
+        $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
+        $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+        $phone = filter_input(INPUT_POST, 'phone', FILTER_SANITIZE_STRING);
+        $date = filter_input(INPUT_POST, 'date', FILTER_SANITIZE_STRING);
+        $time = filter_input(INPUT_POST, 'time', FILTER_SANITIZE_STRING);
+        $party_size = filter_input(INPUT_POST, 'party_size', FILTER_VALIDATE_INT);
 
-    // Checking table availability
-    $stmt = $conn->prepare("CALL CheckTableAvailability(?, ?)");
-    $stmt->execute([$reservation_datetime, $party_size]);
-    $available = $stmt->fetch();
-	$stmt->closeCursor();
+        // Combine date and time to fit the datetime format expected by SQL
+        $reservation_datetime = $date . ' ' . $time;
 
-    if ($available) {
-        // Proceed to add a new reservation
-        $addReservation = $conn->prepare("CALL AddNewReservation(?, ?, ?, ?)");
-        $addReservation->execute([$user_id, $available['ID'], $reservation_datetime, $party_size]);
-        $message = "Reservation made successfully for {$date} at {$time}.";
-		$addReservation->closeCursor();
-    } else {
-        $message = "No tables available for the selected date and time. Please choose another time.";
+        // Checking table availability
+        $stmt = $conn->prepare("CALL CheckTableAvailability(?, ?)");
+        $stmt->execute([$reservation_datetime, $party_size]);
+        $available = $stmt->fetch();
+        $stmt->closeCursor();
+
+        if ($available) {
+            // Proceed to add a new reservation
+            $addReservation = $conn->prepare("CALL AddNewReservation(?, ?, ?, ?)");
+            $addReservation->execute([$user_id, $available['ID'], $reservation_datetime, $party_size]);
+            $message = "Reservation made successfully for {$date} at {$time}.";
+            $addReservation->closeCursor();
+        } else {
+            $message = "No tables available for the selected date and time. Please choose another time.";
+        }
+    }
+
+    if (isset($_POST['cancel_reservation'])) {
+        $reservation_id = $_POST['reservation_id'];
+
+        // Call the stored procedure to cancel the reservation
+        $cancelReservation = $conn->prepare("CALL CancelReservation(?)");
+        $cancelReservation->execute([$reservation_id]);
+
+        // Check if the reservation was cancelled successfully
+        if ($cancelReservation->rowCount() > 0) {
+            $message = "Reservation cancelled successfully.";
+        } else {
+            $message = "Failed to cancel the reservation or reservation time is too close.";
+        }
     }
 }
+
 
 ?>
 
@@ -96,11 +115,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <input type="time" id="time" name="time" required><br>
   <label for="party_size">Party Size:</label>
   <input type="number" id="party_size" name="party_size" min="1" required><br>
-  <button type="submit">Make Reservation</button>
+  <button type="submit" name = "make_reservation">Make Reservation</button>
 </form>
-
-         <a href="menu.html" class="btn">our menu</a>
       </div>
+<div class="reservations-list">
+    <h2>Your Reservations</h2>
+    <?php
+    $reservations = $conn->prepare("SELECT ID, DateofRes, NumofGuests FROM reservations WHERE CustomerID = ?");
+    $reservations->execute([$user_id]);
+    if ($reservations->rowCount() > 0) {
+     while ($row = $reservations->fetch(PDO::FETCH_ASSOC)) {
+    echo "<div class='reservation-item'>";
+    echo "<p>Reservation on: " . htmlspecialchars($row['DateofRes']) . " for " . htmlspecialchars($row['NumofGuests']) . " guests</p>";
+    echo "<form method='post' action='update_reservation.php'>";
+    echo "<input type='hidden' name='reservation_id' value='" . htmlspecialchars($row['ID']) . "'>";
+    echo "<button type='submit' name='update_reservation'>Edit</button><br>";
+    echo "</form>";
+	echo "<form method='post' action='reservation.php'>";
+	 echo "<input type='hidden' name='reservation_id' value='" . htmlspecialchars($row['ID']) . "'>";
+echo "<button type='submit' name='cancel_reservation' onclick='return confirm(\"Are you sure you want to cancel this reservation?\")'>Cancel</button>";
+    echo "</div>";
+	echo "</form>";
+     }
+}
+ else {
+        echo "<p>No reservations found.</p>";
+    }
+    ?>
+</div>
 
    </div>
 

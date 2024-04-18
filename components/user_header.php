@@ -43,7 +43,7 @@ if (isset($message) && is_array($message)) {
             if($select_profile->rowCount() > 0){
                $fetch_profile = $select_profile->fetch(PDO::FETCH_ASSOC);
          ?>
-         <p class="name"><?= $fetch_profile['Fname'] . ' ' . $fetch_profile['LName']; ?></p>
+         <p class="name"><?= $fetch_profile['Fname']; ?></p>
          <div class="flex">
             <a href="profile.php" class="btn">profile</a>
             <a href="components/user_logout.php" onclick="return confirm('logout from this website?');" class="delete-btn">logout</a>

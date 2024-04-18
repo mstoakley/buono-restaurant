@@ -12,11 +12,12 @@ if(isset($_SESSION['user_id'])){
 
 if(isset($_POST['submit'])){
 
-   $fname = filter_var($_POST['Fname'], FILTER_SANITIZE_STRING); // Assuming 'fname' field for the first name
-   $lname = filter_var($_POST['LName'], FILTER_SANITIZE_STRING); // Assuming 'lname' field for the last name
+   $fname = filter_var($_POST['name'], FILTER_SANITIZE_STRING); // Assuming 'fname' field for the first name
    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
-   $pass = $_POST['pass'];
-   $cpass = $_POST['cpass'];
+   $pass = sha1($_POST['pass']);
+   $pass = filter_var($pass, FILTER_SANITIZE_STRING);
+   $cpass = sha1($_POST['cpass']);
+   $cpass = filter_var($cpass, FILTER_SANITIZE_STRING);
 
    if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
       $message[] = 'invalid email format!';
@@ -28,9 +29,8 @@ if(isset($_POST['submit'])){
       if($select_user->rowCount() > 0){
          $message[] = 'email already exists!';
       }else{
-         $pass = password_hash($pass, PASSWORD_DEFAULT);
-         $insert_user = $conn->prepare("INSERT INTO `customers`(Email, Password, Fname, LName) VALUES(?,?,?,?)");
-         $insert_user->execute([$email, $pass, $fname, $lname]);
+         $insert_user = $conn->prepare("INSERT INTO `customers`(Email, Password, Fname) VALUES(?,?,?)");
+         $insert_user->execute([$email, $pass, $fname]);
          $_SESSION['user_id'] = $conn->lastInsertId();
          header('location:home.php');
       }
@@ -67,7 +67,6 @@ if(isset($_POST['submit'])){
       <h3>register now</h3>
       <input type="text" name="name" required placeholder="enter your name" class="box" maxlength="50">
       <input type="email" name="email" required placeholder="enter your email" class="box" maxlength="50" oninput="this.value = this.value.replace(/\s/g, '')">
-      <input type="number" name="number" required placeholder="enter your number" class="box" min="0" max="9999999999" maxlength="10">
       <input type="password" name="pass" required placeholder="enter your password" class="box" maxlength="50" oninput="this.value = this.value.replace(/\s/g, '')">
       <input type="password" name="cpass" required placeholder="confirm your password" class="box" maxlength="50" oninput="this.value = this.value.replace(/\s/g, '')">
       <input type="submit" value="register now" name="submit" class="btn">

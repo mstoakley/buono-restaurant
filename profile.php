@@ -44,7 +44,6 @@ if(isset($_SESSION['user_id'])){
       <p><i class="fas fa-user"></i><span><span><?= $fetch_profile['Fname']; ?></span></span></p>
       <p><i class="fas fa-envelope"></i><span><?= $fetch_profile['Email']; ?></span></p>
       <a href="update_profile.php" class="btn">update info</a>
-      <a href="update_reservation.php" class="btn">update or cancel reservation</a>
    </div>
 
 </section>
