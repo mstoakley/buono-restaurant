@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 17, 2024 at 02:31 AM
+-- Generation Time: Apr 18, 2024 at 11:35 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -63,11 +63,11 @@ DELIMITER ;
 --
 
 CREATE TABLE `cart` (
-  `CartID` int(11) NOT NULL,
-  `CustomerID` int(11) DEFAULT NULL,
-  `MenuID` int(11) DEFAULT NULL,
-  `Quantity` int(11) DEFAULT NULL,
-  `Price` decimal(10,2) DEFAULT NULL,
+  `ID` int(11) NOT NULL,
+  `CustomerID` int(11) NOT NULL,
+  `MenuID` int(11) NOT NULL,
+  `Quantity` int(11) NOT NULL,
+  `Price` decimal(10,2) NOT NULL,
   `AddedOn` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -81,17 +81,17 @@ CREATE TABLE `customers` (
   `ID` int(11) NOT NULL,
   `Email` varchar(30) NOT NULL,
   `Password` varchar(15) NOT NULL,
-  `Fname` varchar(30) NOT NULL,
-  `LName` varchar(30) NOT NULL
+  `Fname` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `customers`
 --
 
-INSERT INTO `customers` (`ID`, `Email`, `Password`, `Fname`, `LName`) VALUES
-(1, 'mariahstoakley@gmail.com', '$2y$10$KXC.Eevn', 'Mariah', ''),
-(2, 'testing@gmail.com', '$2y$10$Jj3kBDu9', '', '');
+INSERT INTO `customers` (`ID`, `Email`, `Password`, `Fname`) VALUES
+(1, 'mariahstoakley@gmail.com', '$2y$10$KXC.Eevn', 'Mariah'),
+(2, 'testing@gmail.com', '$2y$10$Jj3kBDu9', 'Test!'),
+(3, 'mstoakley@pvamu.edu', '36508dc6b91d9e3', 'Mariah J Stoakley');
 
 -- --------------------------------------------------------
 
@@ -154,9 +154,7 @@ CREATE TABLE `orderitems` (
 --
 
 INSERT INTO `orderitems` (`ID`, `OrderID`, `CustomerID`, `MenuID`, `Price`, `Quantity`) VALUES
-(13, NULL, 1, 3, 15, 1),
-(14, NULL, 2, 2, 21, 2),
-(15, NULL, 2, 1, 21, 1);
+(18, 7, 2, 2, 21, 1);
 
 -- --------------------------------------------------------
 
@@ -178,7 +176,8 @@ CREATE TABLE `orders` (
 INSERT INTO `orders` (`ID`, `CustomerID`, `OrderDate`, `TotalAmount`) VALUES
 (2, 1, '2024-04-17 01:35:38', 16),
 (3, 1, '2024-04-17 01:38:52', 99),
-(4, 1, '2024-04-17 01:56:28', 42);
+(4, 1, '2024-04-17 01:56:28', 42),
+(7, 2, '2024-04-16 20:46:49', 21);
 
 -- --------------------------------------------------------
 
@@ -192,7 +191,7 @@ CREATE TABLE `reservations` (
   `DateofRes` datetime NOT NULL,
   `NumofGuests` int(11) NOT NULL,
   `CustomerID` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ;
 
 --
 -- Dumping data for table `reservations`
@@ -265,7 +264,7 @@ INSERT INTO `tablenumbers` (`ID`, `NumofSeats`) VALUES
 -- Indexes for table `cart`
 --
 ALTER TABLE `cart`
-  ADD PRIMARY KEY (`CartID`),
+  ADD PRIMARY KEY (`ID`),
   ADD KEY `CustomerID` (`CustomerID`),
   ADD KEY `MenuID` (`MenuID`);
 
@@ -319,13 +318,13 @@ ALTER TABLE `tablenumbers`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `CartID` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `menuitems`
@@ -337,19 +336,19 @@ ALTER TABLE `menuitems`
 -- AUTO_INCREMENT for table `orderitems`
 --
 ALTER TABLE `orderitems`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `reservations`
 --
 ALTER TABLE `reservations`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tablenumbers`
